@@ -41,19 +41,28 @@ bun run dev
 
 This app uses the [`ibkr-client`](https://www.npmjs.com/package/ibkr-client) package.
 
-You need an OAuth config JSON file (DO NOT commit it). Options:
+You need an OAuth config JSON file (DO NOT commit it).
+
+> Note: OAuth direct access is typically available only to **institutional** users. `ibkr-client` currently supports **OAuth 1.0a** (OAuth 2.0 may come later).
 
 - Use the template in `oauth.example.json`, fill in your values, save as `oauth.json`
-- Generate it with `ibkr-client`:
-  1. Follow the upstream instructions to obtain the required files/strings.
-  2. Run:
+- Generate it with `ibkr-client` (OAuth 1.0a):
+  1. Make sure `openssl` is installed.
+  2. Follow the IBKR OAuth setup instructions to obtain **3 files** and **3 strings**:
+     - Files: `dhparam.pem`, `private_encryption.pem`, `private_signature.pem`
+     - Strings: `Consumer Key`, `Access Token`, `Access Token Secret`
+  3. Go to the module directory, copy the 3 files into it, and run the generator:
 
      ```bash
      cd node_modules/ibkr-client
+     # put dhparam.pem / private_encryption.pem / private_signature.pem here
      node configure.js
      ```
 
-  3. Copy the generated `oauth1.json` to your project root as `oauth.json` (or set `IBKR_OAUTH_PATH`).
+  4. Enter the 3 strings when prompted. The script generates `oauth1.json`.
+  5. Store the generated file in a secure location, then either:
+     - Copy/rename it to your project root as `oauth.json`, or
+     - Keep the name/path and set `IBKR_OAUTH_PATH` to point to it.
 
 ## Docker deployment
 

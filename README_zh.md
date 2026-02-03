@@ -41,19 +41,28 @@ bun run dev
 
 本项目使用 [`ibkr-client`](https://www.npmjs.com/package/ibkr-client)。
 
-你需要准备一个 OAuth 配置 JSON 文件（务必不要提交到仓库）。两种方式：
+你需要准备一个 OAuth 配置 JSON 文件（务必不要提交到仓库）。
+
+> 说明：OAuth 直连通常只对 **机构账户** 开放；`ibkr-client` 目前只支持 **OAuth 1.0a**（OAuth 2.0 可能会在未来支持）。
 
 - 参考 `oauth.example.json` 模板，填入你的值后保存为 `oauth.json`
-- 使用 `ibkr-client` 生成：
-  1. 按照上游说明获取所需的文件与字符串（过程中可能需要 `openssl`）。
-  2. 执行：
+- 使用 `ibkr-client` 生成（OAuth 1.0a）：
+  1. 确保已安装 `openssl`。
+  2. 按照 IBKR OAuth 配置页面的指引获取 **3 个文件**与 **3 个字符串**：
+     - 文件：`dhparam.pem`、`private_encryption.pem`、`private_signature.pem`
+     - 字符串：`Consumer Key`、`Access Token`、`Access Token Secret`
+  3. 进入模块目录，将上述 3 个文件放入该目录，并运行生成脚本：
 
      ```bash
      cd node_modules/ibkr-client
+     # 将 dhparam.pem / private_encryption.pem / private_signature.pem 放到此目录
      node configure.js
      ```
 
-  3. 将生成的 `oauth1.json` 复制到项目根目录并命名为 `oauth.json`（或通过 `IBKR_OAUTH_PATH` 指定路径）。
+  4. 按提示输入 3 个字符串，脚本会生成 `oauth1.json`。
+  5. 将 `oauth1.json` 放在安全位置，然后二选一：
+     - 复制/重命名到项目根目录为 `oauth.json`，或
+     - 保持原文件名/路径，并通过 `IBKR_OAUTH_PATH` 指向该文件。
 
 ## Docker 部署
 
@@ -84,4 +93,3 @@ docker run --rm -p 3000:3000 \
 - SQLite 使用 WAL 模式，因此数据库旁边会同时出现 `*.sqlite-wal` / `*.sqlite-shm` 文件。
 - `oauth.json`、`.env`、`data/` 已经在 `.gitignore` 中。
 - 本项目会调用交易相关 API，请谨慎保管密钥文件，并自行承担使用风险。
-
