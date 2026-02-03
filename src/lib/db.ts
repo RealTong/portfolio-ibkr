@@ -9,10 +9,20 @@ export type EquityHistoryPoint = {
   equity: number;
 };
 
-const DATA_DIR = path.join(process.cwd(), "data");
-const DB_PATH = path.join(DATA_DIR, "ibkr-portfolio.sqlite");
+function resolveDbPath(): string {
+  const envPath = process.env.PORTFOLIO_DB_PATH;
+  if (envPath) {
+    if (envPath === ":memory:") return envPath;
+    return path.resolve(envPath);
+  }
+  return path.join(process.cwd(), "data", "ibkr-portfolio.sqlite");
+}
 
-fs.mkdirSync(DATA_DIR, { recursive: true });
+const DB_PATH = resolveDbPath();
+
+if (DB_PATH !== ":memory:") {
+  fs.mkdirSync(path.dirname(DB_PATH), { recursive: true });
+}
 
 const db = new Database(DB_PATH);
 db.exec(`
@@ -156,4 +166,3 @@ export function getEquityHistory({
 
   return { points, bucketMs, fromTs: from, toTs: to };
 }
-

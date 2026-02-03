@@ -5,7 +5,7 @@ import { getConDetail, getIBKRAccountInfo, getIBKRPositions, getLedger } from '.
 import { getEquityHistory, recordLedgerSnapshot } from './db'
 import { existsSync } from 'node:fs'
 
-const app = new Hono<HonoContext>()
+export const app = new Hono<HonoContext>()
 
 type RangeKey = "1d" | "7d" | "1y" | "all";
 
@@ -13,6 +13,18 @@ function isRangeKey(value: string): value is RangeKey {
     return value === "1d" || value === "7d" || value === "1y" || value === "all";
 }
 
+app.onError((err, c) => {
+    console.error(err);
+    return c.json({ error: err.message || "Internal Server Error" }, 500);
+});
+
+const PORTFOLIO_TITLE = process.env.PORTFOLIO_TITLE || "IBKR Portfolio";
+
+app.get("/api/config", (c) => {
+    return c.json({
+        title: PORTFOLIO_TITLE,
+    });
+});
 
 app.get('/api/accountInfo', async (c) => {
     const data = await getIBKRAccountInfo()
@@ -20,7 +32,7 @@ app.get('/api/accountInfo', async (c) => {
 })
 
 app.get('/api/positions', async (c) => {
-    const accountId = c.req.query('accountId') ?? "U13825171"
+    const accountId = c.req.query('accountId') ?? process.env.IBKR_ACCOUNT_ID
     if (!accountId) {
         return c.json({ error: 'Account ID is required' }, 400)
     }
@@ -30,14 +42,20 @@ app.get('/api/positions', async (c) => {
 })
 
 app.get('/api/conDetail', async (c) => {
-    const accountId = c.req.query('accountId') ?? "U13825171"
+    const accountId = c.req.query('accountId') ?? process.env.IBKR_ACCOUNT_ID
+    if (!accountId) {
+        return c.json({ error: 'Account ID is required' }, 400)
+    }
     const conId = c.req.query('conId')
     const data = await getConDetail(accountId, conId)
     return c.json(data)
 })
 
 app.get('/api/ledger', async (c) => {
-    const accountId = c.req.query('accountId') ?? "U13825171"
+    const accountId = c.req.query('accountId') ?? process.env.IBKR_ACCOUNT_ID
+    if (!accountId) {
+        return c.json({ error: 'Account ID is required' }, 400)
+    }
     const data = await getLedger(accountId)
     try {
         recordLedgerSnapshot(accountId, data?.USD)
@@ -48,7 +66,10 @@ app.get('/api/ledger', async (c) => {
 })
 
 app.get('/api/equityHistory', async (c) => {
-    const accountId = c.req.query('accountId') ?? "U13825171"
+    const accountId = c.req.query('accountId') ?? process.env.IBKR_ACCOUNT_ID
+    if (!accountId) {
+        return c.json({ error: 'Account ID is required' }, 400)
+    }
     const rangeParam = c.req.query('range') ?? "1d"
     const range: RangeKey = isRangeKey(rangeParam) ? rangeParam : "1d"
 
@@ -75,4 +96,7 @@ if (existsSync(distPath)) {
     })
 }
 
-export default app
+export default {
+    port: Number(process.env.PORT || 3000),
+    fetch: app.fetch,
+}
