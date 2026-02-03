@@ -16,9 +16,30 @@
 
 - `PORT`：服务端口（默认：`3000`）
 - `PORTFOLIO_TITLE`：界面标题（默认：`IBKR Portfolio`）
+- `PORTFOLIO_MOCK`：开启内置演示数据（默认：`false`）
+- `MOCK_ACCOUNT_ID`：演示账户 ID（默认：`U00000000`）
+- `MOCK_SEED`：演示数据随机种子（默认：`0`）
 - `IBKR_OAUTH_PATH`：IBKR OAuth 配置 JSON 文件路径（默认：`oauth.json`）
 - `PORTFOLIO_DB_PATH`：保存净值快照的 SQLite 路径（默认：`data/ibkr-portfolio.sqlite`）
 - `IBKR_ACCOUNT_ID`：可选的默认账户 ID（仅当某些接口未传 `?accountId=` 时作为兜底）
+
+## 演示 / Mock 模式（用于截图）
+
+如果你只想截图宣传或体验 UI，而不方便接入真实 IBKR 数据，可以开启 mock 模式。
+该模式下 **不需要 `oauth.json`**，后端会直接返回内置的演示账户/持仓/账本/历史数据。
+
+```bash
+PORTFOLIO_MOCK=1 PORTFOLIO_TITLE="Demo Portfolio" bun run dev
+```
+
+Docker：
+
+```bash
+docker run --rm -p 3000:3000 \
+  -e PORTFOLIO_MOCK=1 \
+  -e PORTFOLIO_TITLE="Demo Portfolio" \
+  portfolio-ibkr
+```
 
 ## 本地开发
 
