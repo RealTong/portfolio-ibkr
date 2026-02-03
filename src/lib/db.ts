@@ -15,6 +15,10 @@ function resolveDbPath(): string {
     if (envPath === ":memory:") return envPath;
     return path.resolve(envPath);
   }
+  const mockEnabled = ["1", "true", "yes", "y", "on"].includes(
+    (process.env.PORTFOLIO_MOCK || "").toLowerCase(),
+  );
+  if (mockEnabled) return ":memory:";
   return path.join(process.cwd(), "data", "ibkr-portfolio.sqlite");
 }
 

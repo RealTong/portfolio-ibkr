@@ -16,9 +16,30 @@ This project is designed to be open-sourced without committing secrets or local 
 
 - `PORT`: Server port (default: `3000`)
 - `PORTFOLIO_TITLE`: UI title (default: `IBKR Portfolio`)
+- `PORTFOLIO_MOCK`: Enable built-in demo data (default: `false`)
+- `MOCK_ACCOUNT_ID`: Demo account id (default: `U00000000`)
+- `MOCK_SEED`: Demo data seed (default: `0`)
 - `IBKR_OAUTH_PATH`: Path to IBKR OAuth config JSON (default: `oauth.json`)
 - `PORTFOLIO_DB_PATH`: SQLite file path for equity snapshots (default: `data/ibkr-portfolio.sqlite`)
 - `IBKR_ACCOUNT_ID`: Optional fallback account id (used only if some endpoints are called without `?accountId=`)
+
+## Demo / mock mode (for screenshots)
+
+If you just want screenshots or to try the UI without real IBKR data, enable mock mode.
+In this mode, **no `oauth.json` is needed**, and the backend serves built-in demo account/positions/ledger/history.
+
+```bash
+PORTFOLIO_MOCK=1 PORTFOLIO_TITLE="Demo Portfolio" bun run dev
+```
+
+Docker:
+
+```bash
+docker run --rm -p 3000:3000 \
+  -e PORTFOLIO_MOCK=1 \
+  -e PORTFOLIO_TITLE="Demo Portfolio" \
+  portfolio-ibkr
+```
 
 ## Local development
 
