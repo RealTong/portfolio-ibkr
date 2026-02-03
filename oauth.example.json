@@ -1,0 +1,9 @@
+{
+  "accessTokenSecret": "YOUR_ACCESS_TOKEN_SECRET",
+  "accessToken": "YOUR_ACCESS_TOKEN",
+  "consumerKey": "YOUR_CONSUMER_KEY",
+  "encryption": "BASE64_ENCRYPTION_KEY",
+  "signature": "BASE64_SIGNATURE_KEY",
+  "dhPrime": "BASE64_DH_PRIME",
+  "realm": "YOUR_REALM"
+}
