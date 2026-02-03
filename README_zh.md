@@ -2,6 +2,9 @@
 
 [English](./README.md)
 
+![IBKR Logo](./docs/light.png)
+![IBKR Logo](./docs/dark.png)
+
 一个基于 **Bun + Hono + React (Vite)** 的 IBKR 投资组合看板：通过 IBKR Web API 拉取账户信息 / 持仓 / 账本，并将 **净值快照** 持久化到 **SQLite** 以绘制历史曲线。
 
 ## 运行时配置（适合 Docker 开源）

@@ -2,6 +2,9 @@
 
 [中文说明](./README_zh.md)
 
+![IBKR Logo](./docs/light.png)
+![IBKR Logo](./docs/dark.png)
+
 An IBKR portfolio dashboard built with **Bun + Hono + React (Vite)**. It fetches account info / positions / ledger from the IBKR Web API and stores **equity snapshots** in **SQLite** for charting.
 
 ## Runtime configuration (Docker-friendly)
